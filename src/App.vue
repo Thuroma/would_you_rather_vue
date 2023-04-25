@@ -6,39 +6,71 @@
 
     <!-- These are the different parts that are managed by the would-you-rather component 
     When answer-changed happens in would-you-rather, answerChanged is called in the methods -->
-    <would-you-rather 
-    v-bind:question="wyrQuestion"
-    v-bind:answer1="wyrAnswer1"
-    v-bind:answer2="wyrAnswer2"
-    v-on:answer-changed="answerChanged"></would-you-rather>
+    <would-you-rather-question 
+      v-for="question in questions"
+      v-bind:question="question"
+      v-on:answer-changed="answerChanged">
+    </would-you-rather-question>
 
-    <p>{{ userSelectionMessage }}</p>
+    <ul>
+      <li v-for="selection in userSelectionsList">{{ selection.answerChoice }}</li>
+    </ul>
 
   </div>
 </template>
 
 <script>
-import WouldYouRather from './components/WouldYouRather.vue'
+import WouldYouRatherQuestion from './components/WouldYouRatherQuestion.vue'
 
 export default {
   name: 'App',
   components: {
-    WouldYouRather
+    WouldYouRatherQuestion: WouldYouRatherQuestion
   },
   data() {
     return {
-      wyrQuestion: 'Would you rather have a magic carpet that flies or a see-through submarine?',
-      wyrAnswer1: 'Flying magic carpet',
-      wyrAnswer2: 'See-through submarine',
-      userSelectionMessage: ''
+      questions: [
+        {
+          id: 0,
+          question: 'Would you rather have a magic carpet that flies or a see-through submarine?',
+          answer1: 'Flying magic carpet',
+          answer2: 'See-through submarine',
+        },
+        {
+          id: 1,
+          question: 'Would you rather sail a boat or ride in a hang glider?',
+          answer1: 'Sail a boat',
+          answer2: 'Ride in a hang glider',
+        },
+        {
+          id: 2,
+          question: 'Would you rather eat an apple or an orange?',
+          answer1: 'Eat an apple',
+          answer2: 'Eat an orange',
+        }
+      ],
+      userSelectionsList: []
     }
   },
   methods: {
-    answerChanged(choice) {
-      this.userSelectionMessage = `Thanks! You chose ${choice}`
+    answerChanged(id, answer) {
+
+      
+      let choiceMade = this.userSelectionsList.forEach(function(q) {
+        if (q.answerID === id)
+          q.answerChoice = answer
+          return true
+      })
+
+      if (!choiceMade) {
+        this.userSelectionsList.push({answerID: id, answerChoice: answer})
+      }
+      
+
+      }
     }
   }
-}
+
 </script>
 
 <style>
