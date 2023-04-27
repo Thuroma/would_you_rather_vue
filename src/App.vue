@@ -12,6 +12,7 @@
       v-on:answer-changed="answerChanged">
     </would-you-rather-question>
 
+    <h2>Your answers:</h2>
     <ul>
       <li v-for="selection in userSelectionsList">{{ selection.answerChoice }}</li>
     </ul>
@@ -55,18 +56,21 @@ export default {
   methods: {
     answerChanged(id, answer) {
 
-      
-      let choiceMade = this.userSelectionsList.forEach(function(q) {
+      let choiceMade = this.userSelectionsList.find(function(q) {
         if (q.answerID === id)
-          q.answerChoice = answer
           return true
       })
 
-      if (!choiceMade) {
+      if (choiceMade) {
+        choiceMade.answerChoice = answer
+      } else {
         this.userSelectionsList.push({answerID: id, answerChoice: answer})
       }
-      
 
+      this.userSelectionsList.sort(function(q1, q2) {
+        return q1.answerID < q2.answerID ? -1 : 1
+      })
+      
       }
     }
   }
@@ -85,6 +89,10 @@ body {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  background: lightskyblue;
+  background: rgb(148, 225, 221);
+}
+
+li {
+  background: rgb(148, 225, 221);
 }
 </style>
